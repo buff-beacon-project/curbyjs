@@ -35,52 +35,84 @@ export function createDataView(pulse){
   return new DataView(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength))
 }
 
-/**
- * Creates an array of shuffled values, using a version of the
- * [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher-Yates_shuffle).
- *
- * @since 0.1.0
- * @category Array
- * @param {Array} array The array to shuffle.
- * @returns {Array} Returns the new shuffled array.
- * @example
- *
- * shuffle([1, 2, 3, 4])
- * // => [4, 1, 3, 2]
- */
-export function shuffle(array, consumer) {
-  const length = array == null ? 0 : array.length
-  if (!length) {
-    return []
+const arraySwap = (arr, i, j) => {
+  if (i === j){ return }
+  [arr[i], arr[j]] = [arr[j], arr[i]]
+}
+
+export function shuffleSelf(array, shuffleSeed){
+  const size = array.length
+  if (!size){ return array }
+  if (size > shuffleSeed.length + 1){
+    throw new Error(`Insufficient sized seed to shuffle this array. Max length: ${shuffleSeed.length + 1}`)
   }
-  let index = -1
-  const lastIndex = length - 1
-  const result = array.concat([])
-  while (++index < length) {
-    const rand = index + consumer.lessThan(lastIndex - index + 1)
-    const value = result[rand]
-    result[rand] = result[index]
-    result[index] = value
+  for (let i = size; i > 1; i--){
+    const r = shuffleSeed[i - 2]
+    // swap values at i-1 and r
+    arraySwap(array, i - 1, r)
   }
-  return result
+  return array
+}
+
+export function shuffle(array, shuffleSeed){
+  return shuffleSelf(array.slice(), shuffleSeed)
+}
+
+// https://arxiv.org/abs/1805.10941
+// https://lemire.me/blog/2016/06/30/fast-random-shuffling/
+export function boundedRandum(s, bitStream){
+  if (s < 0 || s % 1 !== 0) { throw new Error('Value must be a positive integer >= 2') }
+  if (s < 2) { return 0 }
+  const nbits = s >> 1 // Math.ceil(Math.log2(max))
+  const max = 1 << nbits
+  if (!Number.isSafeInteger(max * (s - 1))){
+    throw new Error('Range is too high to evaluate')
+  }
+
+  let x = bitStream.readBits(nbits, false)
+  let m = x * s
+  let l = m % max
+  if (l < s){
+    const threshold = (max - s) % s
+    while (l < threshold){
+      x = bitStream.readBits(nbits, false)
+      m = x * s
+      l = m % max
+    }
+  }
+  return m >> nbits
+}
+
+// Return an array fully filled with bounded random values appropriate
+// to shuffle a list. The maximum sized list that can be shuffled is
+// the size of the returned seed array + 1
+const getShuffleSeed = (bitStream) => {
+  const ret = []
+  let s = 2
+  let done = false
+  while (!done){
+    try {
+      const x = boundedRandum(s++, bitStream)
+      ret.push(x)
+    } catch (e){
+      done = true
+    }
+  }
+  return ret
 }
 
 export function consumer(pulse){
   const dataView = createDataView(pulse)
   const buffer = dataView.buffer
   const bitStream = new BitStream(buffer)
-
+  const shuffleSeed = getShuffleSeed(new BitStream(buffer))
   return {
     dataView
     , buffer
     , bitStream
-    , lessThan: (max) => {
-      if (max < 0){ throw new Error('Value must be positive') }
-      if (max < 2){ return 0 }
-      const nbits = Math.ceil(Math.log2(max))
-      const ret = bitStream.readBits(nbits, false) % max
-      // console.log(max, nbits, ret)
-      return ret
+    , shuffleSeed
+    , shuffle(array){
+      return shuffle(array, shuffleSeed)
     }
   }
 }
