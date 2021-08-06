@@ -27,11 +27,17 @@ const config = {
   module: {
     rules: []
   },
+  node: {
+    global: false
+  },
   resolve: {
     modules: [path.resolve('./node_modules')],
     extensions: ['.json', '.js'],
     alias: {
       '@': path.join(__dirname, 'src')
+    },
+    fallback: {
+      buffer: require.resolve('buffer')
     }
   },
   optimization: {

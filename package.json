@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "bit-buffer": "^0.2.5"
+    "bit-buffer": "^0.2.5",
+    "buffer": "^6.0.3"
   }
 }

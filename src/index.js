@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Buffer } from 'buffer'
 import { BitStream } from 'bit-buffer'
 
 const MAXU2 = 3
@@ -28,6 +29,16 @@ const fetch = axios.create({
 
 export function fetchLast(){
   return fetch('/last').then(r => r.data)
+}
+
+export function nextPulseAt(){
+  const d = new Date()
+  d.setMinutes(d.getMinutes() + 1, 0, 0)
+  return d
+}
+
+export function msToNextPulse(){
+  return nextPulseAt().getTime() - (new Date()).getTime()
 }
 
 export function createDataView(pulse){
@@ -60,13 +71,20 @@ export function shuffle(array, shuffleSeed){
 
 // https://arxiv.org/abs/1805.10941
 // https://lemire.me/blog/2016/06/30/fast-random-shuffling/
-export function boundedRandum(s, bitStream){
+export function boundedRandom(s, bitStream){
   if (s < 0 || s % 1 !== 0) { throw new Error('Value must be a positive integer >= 2') }
   if (s < 2) { return 0 }
-  const nbits = s >> 1 // Math.ceil(Math.log2(max))
+  const log2s = Math.log2(s)
+  const nbits = Math.ceil(log2s)
   const max = 1 << nbits
   if (!Number.isSafeInteger(max * (s - 1))){
     throw new Error('Range is too high to evaluate')
+  }
+
+  if ( log2s % 1 === 0 ){
+    // is whole... so we can just read bits
+    // without filtering
+    return bitStream.readBits(nbits, false)
   }
 
   let x = bitStream.readBits(nbits, false)
@@ -83,22 +101,22 @@ export function boundedRandum(s, bitStream){
   return m >> nbits
 }
 
+export function* iterUntilCaught(fn){
+  let i = 0
+  try {
+    while (true){
+      yield fn(i++)
+    }
+  } catch (e){}
+}
+
 // Return an array fully filled with bounded random values appropriate
 // to shuffle a list. The maximum sized list that can be shuffled is
 // the size of the returned seed array + 1
 const getShuffleSeed = (bitStream) => {
-  const ret = []
-  let s = 2
-  let done = false
-  while (!done){
-    try {
-      const x = boundedRandum(s++, bitStream)
-      ret.push(x)
-    } catch (e){
-      done = true
-    }
-  }
-  return ret
+  return Array.from(
+    iterUntilCaught((s) => boundedRandom(s + 2, bitStream))
+  )
 }
 
 export function consumer(pulse){
