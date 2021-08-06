@@ -1,4 +1,4 @@
-const { fetchLast, consumer, iterUntilCaught, msToNextPulse } = require('..')
+const { fetchLast, BitReader, msToNextPulse } = require('..')
 
 const arr = Array(60).fill(0).map((x, i) => i)
 
@@ -6,15 +6,14 @@ fetchLast().then(pulse => {
   console.log(pulse.value)
   return pulse
 }).then(p => {
-  const { shuffleSeed } = consumer(p)
-  console.log(shuffleSeed, shuffleSeed.every((v, i) => v < i + 2))
-  const mixed = consumer(p).shuffle(arr)
+  const reader = BitReader.from(p)
+  console.log(reader.shuffleSeed, reader.shuffleSeed.every((v, i) => v < i + 2))
+  const mixed = reader.shuffled(arr)
   console.log(mixed)
 
-  const { bitStream } = consumer(p)
   const directions = ['up', 'down', 'left', 'right']
-  const randomDirections = Array.from(
-    iterUntilCaught(() => directions[bitStream.readBits(2, false)])
+  const randomDirections = reader.unfold((stream) =>
+    directions[stream.readBits(2, false)]
   )
   console.log(randomDirections, randomDirections.length)
 
@@ -22,5 +21,3 @@ fetchLast().then(pulse => {
   // nextPulseAt()
 })
 
-// shuffle
-// views

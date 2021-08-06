@@ -35,9 +35,6 @@ const config = {
     extensions: ['.json', '.js'],
     alias: {
       '@': path.join(__dirname, 'src')
-    },
-    fallback: {
-      buffer: require.resolve('buffer')
     }
   },
   optimization: {
