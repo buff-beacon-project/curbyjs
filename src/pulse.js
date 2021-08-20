@@ -1,31 +1,81 @@
 import axios from 'axios'
 import { getTimeStamp } from './util'
-import { pki } from 'node-forge'
+import stringify from 'safe-stable-stringify'
+import { KJUR } from 'jsrsasign'
+import { SHA3 } from 'sha3';
 
 const beaconFetch = axios.create({
-  baseURL: 'http://71.56.217.42:8000/api/'
+  baseURL: 'https://random.colorado.edu/api/'
   , timeout: 10000
-});
+})
+
+export function setBeaconDomain(domain){
+  if (domain.substr(0, 4) !== 'http'){
+    domain = 'https://' + domain
+  }
+  beaconFetch.defaults.baseURL = `${domain}/api/`
+}
 
 const CERTIFICATES = {}
 
-export function getPulseDigest(pulse){
-  return new ArrayBuffer(512)
+function getSigningAlgorithm(pulse){
+  switch (pulse.content.cypher_suite){
+    case 0:
+      return 'SHA256withECDSA'
+    default:
+      throw new Error(`Cypher suite ${pulse.content.cypher_suite} not implemented`)
+  }
+}
+
+function getHashFunction(pulse){
+  switch (pulse.content.cypher_suite) {
+    case 0:
+      return (() => {
+        const hash = new SHA3(512)
+        return (msg, encoding, outencoding) => {
+          hash.reset()
+          hash.update(msg, encoding)
+          return hash.digest(outencoding || encoding)
+        }
+      })()
+    default:
+      throw new Error(`Cypher suite ${pulse.content.cypher_suite} not implemented`)
+  }
+}
+
+export function serializePulse(pulse){
+  return stringify(pulse.content)
+}
+
+export function validatePulse(pulse, certPEM){
+  const message = serializePulse(pulse)
+  const alg = getSigningAlgorithm(pulse)
+  const sig = new KJUR.crypto.Signature({ alg })
+  sig.init(certPEM)
+  sig.updateString(message)
+  if (!sig.verify(pulse.signature)) {
+    throw new Error('Invalid pulse signature!')
+  }
+
+  const hash = getHashFunction(pulse)
+  if (hash(pulse.signature, 'hex') !== pulse.value) {
+    throw new Error('Pulse value does not match hash of signature!')
+  }
+
+  return true
 }
 
 async function parseResponseAndValidate(res){
   const pulse = res.data
 
-  let cert = CERTIFICATES[pulse.certificate_id]
+  const certId = pulse.content.certificate_id
+  let cert = CERTIFICATES[certId]
   if (!cert){
-    cert = pki.certificateFromPem(await fetchCertificate(pulse.certificate_id), true)
-    CERTIFICATES[pulse.certificate_id] = cert
+    cert = await fetchCertificate(certId)
+    CERTIFICATES[certId] = cert
   }
 
-  const digest = getPulseDigest()
-  if (!cert.verify(digest, pulse.signature)){
-    throw new Error('Invalid pulse signature!')
-  }
+  validatePulse(pulse, cert) // throws if invalid
 
   return pulse
 }
@@ -35,27 +85,14 @@ export function fetchCertificate(hashId){
     responseType: 'text'
   })
     .then(res => res.data)
-    .then(text => {
-      return text.replace(
-        /-----BEGIN ([A-Za-z0-9- ]+)-----/,
-        '-----BEGIN CERTIFICATE-----'
-      ).replace(
-        /-----END ([A-Za-z0-9- ]+)-----/,
-        '-----END CERTIFICATE-----'
-      )
-    })
-    .then(text => {
-      console.log(text)
-      return text
-    })
 }
 
 export function fetch(chain, pulse){
   return beaconFetch(`/chain/${chain}/pulse/${pulse}`).then(parseResponseAndValidate)
 }
 
-export function fetchLast() {
-  return beaconFetch('/last').then(parseResponseAndValidate)
+export function fetchLatest() {
+  return beaconFetch('/latest').then(parseResponseAndValidate)
 }
 
 export function fetchAt(date){
@@ -73,12 +110,12 @@ export function fetchBefore(date) {
   return beaconFetch(`/before/${ts}`).then(parseResponseAndValidate)
 }
 
-export function nextPulseAt() {
-  const d = new Date()
-  d.setMinutes(d.getMinutes() + 1, 0, 0)
+export function nextPulseAt(latestPulse) {
+  const d = new Date(latestPulse.content.time_stamp)
+  d.setTime(d.getTime() + latestPulse.content.period)
   return d
 }
 
-export function msToNextPulse() {
-  return nextPulseAt().getTime() - (new Date()).getTime()
+export function msToNextPulse(latestPulse) {
+  return nextPulseAt(latestPulse).getTime() - (new Date()).getTime()
 }

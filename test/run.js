@@ -1,8 +1,10 @@
-const { fetchLast, BitReader, msToNextPulse } = require('..')
+const { fetchLatest, BitReader, msToNextPulse, setBeaconDomain } = require('..')
+
+setBeaconDomain('http://192.168.99.105:8000')
 
 const arr = Array(60).fill(0).map((x, i) => i)
 
-fetchLast().then(pulse => {
+fetchLatest().then(pulse => {
   console.log(pulse.value)
   return pulse
 }).then(p => {
@@ -17,7 +19,7 @@ fetchLast().then(pulse => {
   )
   console.log(randomDirections, randomDirections.length)
 
-  console.log('ms to next pulse', msToNextPulse())
+  console.log('ms to next pulse', msToNextPulse(p))
   // nextPulseAt()
 })
 
