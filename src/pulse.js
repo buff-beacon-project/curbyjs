@@ -2,7 +2,8 @@ import axios from 'axios'
 import { getTimeStamp } from './util'
 import stringify from 'safe-stable-stringify'
 import { KJUR } from 'jsrsasign'
-import { SHA3 } from 'sha3';
+import { SHA3 } from 'sha3'
+import * as Errors from './errors'
 
 const beaconFetch = axios.create({
   baseURL: 'https://random.colorado.edu/api/'
@@ -54,29 +55,74 @@ export function validatePulse(pulse, certPEM){
   sig.init(certPEM)
   sig.updateString(message)
   if (!sig.verify(pulse.signature)) {
-    throw new Error('Invalid pulse signature!')
+    throw new Errors.InvalidSignature('Invalid pulse signature!')
   }
 
   const hash = getHashFunction(pulse)
   if (hash(pulse.signature, 'hex') !== pulse.value) {
-    throw new Error('Pulse value does not match hash of signature!')
+    throw new Errors.InvalidPulse('Pulse value does not match hash of signature!')
   }
 
   return true
 }
 
-async function parseResponseAndValidate(res){
-  const pulse = res.data
+export function checkPulseTiming(pulse, rule = { latest: true }){
+  if (rule.latest){
+    if (msToNextPulse(pulse) > 0){
+      return pulse
+    } else {
+      throw new Errors.LatePulse('Unexpected Pulse Timing')
+    }
+  }
 
+  if (rule.after) {
+    const expected = new Date(rule.after).getTime()
+    const actual = new Date(pulse.content.time_stamp).getTime()
+    if ((actual - expected) <= pulse.content.period){
+      return pulse
+    } else {
+      throw new Errors.LatePulse('Unexpected Pulse Timing')
+    }
+  }
+
+  if (rule.at){
+    const expected = new Date(rule.at).getTime()
+    const actual = new Date(pulse.content.time_stamp).getTime()
+    if ((actual - expected) < pulse.content.period){
+      return pulse
+    } else {
+      throw new Errors.LatePulse('Unexpected Pulse Timing')
+    }
+  }
+
+  if (rule.before){
+    const expected = new Date(rule.before).getTime()
+    const actual = new Date(pulse.content.time_stamp).getTime()
+    if ((expected - actual) < pulse.content.period){
+      return pulse
+    } else {
+      throw new Errors.LatePulse('Unexpected Pulse Timing')
+    }
+  }
+
+  throw new Error('Invalid rule specified')
+}
+
+export async function fetchCertAndValidatePulse(pulse){
   const certId = pulse.content.certificate_id
   let cert = CERTIFICATES[certId]
-  if (!cert){
+  if (!cert) {
     cert = await fetchCertificate(certId)
     CERTIFICATES[certId] = cert
   }
 
   validatePulse(pulse, cert) // throws if invalid
+  return pulse
+}
 
+async function parseResponseAndValidate(res){
+  const pulse = res.data
+  fetchCertAndValidatePulse(pulse)
   return pulse
 }
 
@@ -92,7 +138,9 @@ export function fetch(chain, pulse){
 }
 
 export function fetchLatest() {
-  return beaconFetch('/latest').then(parseResponseAndValidate)
+  return beaconFetch('/latest')
+    .then(parseResponseAndValidate)
+    .then(pulse => checkPulseTiming(pulse))
 }
 
 export function fetchAt(date){
@@ -108,6 +156,15 @@ export function fetchAfter(date) {
 export function fetchBefore(date) {
   const ts = getTimeStamp(date)
   return beaconFetch(`/before/${ts}`).then(parseResponseAndValidate)
+}
+
+export function fetchSubchain(chain, start, end){
+  return beaconFetch(`/chain/${chain}/subchain/${start}/${end}`)
+    .then(res => res.data)
+    .then(subchain => {
+      subchain.pulses.forEach(fetchCertAndValidatePulse)
+      return subchain
+    })
 }
 
 export function nextPulseAt(latestPulse) {

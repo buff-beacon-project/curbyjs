@@ -28,7 +28,7 @@ const config = {
     rules: []
   },
   node: {
-    global: false
+    global: true
   },
   resolve: {
     modules: [path.resolve('./node_modules')],
