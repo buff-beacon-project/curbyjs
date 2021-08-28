@@ -4,6 +4,7 @@ import stringify from 'safe-stable-stringify'
 import { KJUR } from 'jsrsasign'
 import { SHA3 } from 'sha3'
 import * as Errors from './errors'
+import * as StatusCodes from './status-codes'
 
 const beaconFetch = axios.create({
   baseURL: 'https://random.colorado.edu/api/'
@@ -67,6 +68,10 @@ export function validatePulse(pulse, certPEM){
 }
 
 export function checkPulseTiming(pulse, rule = { latest: true }){
+  if (StatusCodes.has(pulse, StatusCodes.TimeGap)){
+    throw new Errors.LatePulse('Pulse Status signifying TimeGap')
+  }
+
   if (rule.latest){
     if (msToNextPulse(pulse) > 0){
       return pulse
