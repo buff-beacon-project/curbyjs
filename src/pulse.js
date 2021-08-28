@@ -50,6 +50,10 @@ export function serializePulse(pulse){
 }
 
 export function validatePulse(pulse, certPEM){
+  if (pulse.content.pulse_index !== 0 && StatusCodes.has(pulse, StatusCodes.UnmatchedPrecom)) {
+    throw new Errors.LatePulse('Pulse has unmatched precommitment value')
+  }
+
   const message = serializePulse(pulse)
   const alg = getSigningAlgorithm(pulse)
   const sig = new KJUR.crypto.Signature({ alg })
