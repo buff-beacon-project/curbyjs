@@ -5,6 +5,15 @@ export function isISODate(str) {
   return isoDateRegExp.test(str);
 }
 
+export function zip(...arrays) {
+  const minLen = Math.min(...arrays.map(arr => arr.length))
+  const [firstArr, ...restArrs] = arrays
+  return Array.prototype.map.call(
+    firstArr.slice(0, minLen),
+    (val, i) => [val, ...restArrs.map(arr => arr[i])]
+  )
+}
+
 export function getTimeStamp(isoStrOrDate){
   if (typeof date === 'string' && isISODate(isoStrOrDate)) {
     return isoStrOrDate
@@ -15,7 +24,7 @@ export function getTimeStamp(isoStrOrDate){
   throw new Error('Date must be an ISO compliant datetime string, or a Date instance')
 }
 
-export function hex2buf(input) {
+export function hex2bytes(input){
   if (typeof input !== 'string') {
     throw new TypeError('Input must be a string')
   }
@@ -28,7 +37,19 @@ export function hex2buf(input) {
   return Uint8Array.from({ length: strLen / 2 }, (v, i) => {
     i *= 2
     return parseInt(input.substring(i, i + 2), 16)
-  }).buffer
+  })
+}
+
+export function hex2buf(input) {
+  return hex2bytes(input).buffer
+}
+
+export function xorArrays(a, b){
+  const out = zip(a, b).map(([x, y]) => x ^ y)
+  if (a.constructor && a.constructor.from){
+    return a.constructor.from(out)
+  }
+  return out
 }
 
 export function* iterBitStream(fn) {

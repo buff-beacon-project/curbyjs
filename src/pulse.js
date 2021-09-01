@@ -1,10 +1,12 @@
 import axios from 'axios'
-import { getTimeStamp } from './util'
+import { getTimeStamp, zip, hex2bytes, xorArrays } from './util'
 import stringify from 'safe-stable-stringify'
 import { KJUR } from 'jsrsasign'
 import { SHA3 } from 'sha3'
 import * as Errors from './errors'
 import * as StatusCodes from './status-codes'
+
+const CACHED_SIGNATURES = {}
 
 const beaconFetch = axios.create({
   baseURL: 'https://random.colorado.edu/api/'
@@ -49,19 +51,42 @@ export function serializePulse(pulse){
   return stringify(pulse.content)
 }
 
+export function checkPrecommitmentValue(prevPulse, pulse){
+  const randLocal = hex2bytes(pulse.content.local_random_value)
+  const value = xorArrays(randLocal, hex2bytes(prevPulse.value))
+  const hash = getHashFunction(prevPulse)
+  const hashed = hash(Buffer.from(value.buffer), null, 'hex')
+  const valid = prevPulse.content.precommitment_value === hashed
+  if (!valid){
+    throw new Errors.InvalidPrecom('Invalid Precommitment Value')
+  }
+  return true
+}
+
 export function validatePulse(pulse, certPEM){
   if (pulse.content.pulse_index !== 0 && StatusCodes.has(pulse, StatusCodes.UnmatchedPrecom)) {
-    throw new Errors.LatePulse('Pulse has unmatched precommitment value')
+    throw new Errors.InvalidPulse('Pulse has unmatched precommitment value')
   }
 
   const message = serializePulse(pulse)
-  const alg = getSigningAlgorithm(pulse)
-  const sig = new KJUR.crypto.Signature({ alg })
-  sig.init(certPEM)
-  sig.updateString(message)
-  if (!sig.verify(pulse.signature)) {
+
+  let signatureValid = false
+  if (message in CACHED_SIGNATURES){
+    signatureValid = pulse.signature === CACHED_SIGNATURES[message]
+  } else {
+    const alg = getSigningAlgorithm(pulse)
+    const sig = new KJUR.crypto.Signature({ alg })
+    sig.init(certPEM)
+    sig.updateString(message)
+    signatureValid = sig.verify(pulse.signature)
+  }
+
+  if (!signatureValid) {
     throw new Errors.InvalidSignature('Invalid pulse signature!')
   }
+
+  // ok signature. cache it
+  CACHED_SIGNATURES[message] = pulse.signature
 
   const hash = getHashFunction(pulse)
   if (hash(pulse.signature, 'hex') !== pulse.value) {
@@ -69,6 +94,24 @@ export function validatePulse(pulse, certPEM){
   }
 
   return true
+}
+
+export function checkChainIntegrity(pulses){
+  pulses = pulses.slice(0)
+  // sort by pulse index
+  pulses.sort((a, b) => a.content.pulse_index - b.content.pulse_index)
+  const connected = zip(pulses, pulses.slice(1))
+    .every(([prev, next]) => {
+      const ok = next.content.skip_anchors.some(anchor => anchor.value === prev.value)
+      if (!ok){
+        throw new Errors.BrokenChain(
+          `Provided chain is broken between pulse ${prev.content.pulse_index} and ${next.content.pulse_index}`
+        )
+      }
+      return ok
+    })
+
+  return connected
 }
 
 export function checkPulseTiming(pulse, rule = { latest: true }){
@@ -154,17 +197,23 @@ export function fetchLatest() {
 
 export function fetchAt(date){
   const ts = getTimeStamp(date)
-  return beaconFetch(`/at/${ts}`).then(parseResponseAndValidate)
+  return beaconFetch(`/at/${ts}`)
+    .then(parseResponseAndValidate)
+    .then(pulse => checkPulseTiming(pulse, { at: date }))
 }
 
 export function fetchAfter(date) {
   const ts = getTimeStamp(date)
-  return beaconFetch(`/after/${ts}`).then(parseResponseAndValidate)
+  return beaconFetch(`/after/${ts}`)
+    .then(parseResponseAndValidate)
+    .then(pulse => checkPulseTiming(pulse, { after: date }))
 }
 
 export function fetchBefore(date) {
   const ts = getTimeStamp(date)
-  return beaconFetch(`/before/${ts}`).then(parseResponseAndValidate)
+  return beaconFetch(`/before/${ts}`)
+    .then(parseResponseAndValidate)
+    .then(pulse => checkPulseTiming(pulse, { before: date }))
 }
 
 export function fetchSubchain(chain, start, end){
@@ -172,6 +221,17 @@ export function fetchSubchain(chain, start, end){
     .then(res => res.data)
     .then(subchain => {
       subchain.pulses.forEach(fetchCertAndValidatePulse)
+      checkChainIntegrity(subchain.pulses)
+      return subchain
+    })
+}
+
+export function fetchSkiplist(chain, start, end) {
+  return beaconFetch(`/chain/${chain}/skiplist/${start}/${end}`)
+    .then(res => res.data)
+    .then(subchain => {
+      subchain.pulses.forEach(fetchCertAndValidatePulse)
+      checkChainIntegrity(subchain.pulses)
       return subchain
     })
 }
