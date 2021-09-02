@@ -11,6 +11,10 @@ const CACHED_SIGNATURES = {}
 const beaconFetch = axios.create({
   baseURL: 'https://random.colorado.edu/api/'
   , timeout: 10000
+  , headers: {
+    // Accept in curby v1 json format
+    'Accept': 'application/vnd.curby.v1+json'
+  }
 })
 
 /**
