@@ -19,91 +19,92 @@
         *   [Examples][15]
     *   [from][16]
         *   [Parameters][17]
-*   [InvalidSignature][18]
-*   [InvalidPulse][19]
-*   [LatePulse][20]
-*   [BrokenChain][21]
-*   [InvalidPrecom][22]
-*   [setBeaconDomain][23]
-    *   [Parameters][24]
-*   [serializePulse][25]
+*   [UnfoldCallback][18]
+    *   [Parameters][19]
+*   [InvalidSignature][20]
+*   [InvalidPulse][21]
+*   [LatePulse][22]
+*   [BrokenChain][23]
+*   [InvalidPrecom][24]
+*   [setBeaconDomain][25]
     *   [Parameters][26]
-*   [checkPrecommitmentValue][27]
+*   [serializePulse][27]
     *   [Parameters][28]
-*   [validatePulse][29]
+*   [checkPrecommitmentValue][29]
     *   [Parameters][30]
-*   [checkChainIntegrity][31]
+*   [validatePulse][31]
     *   [Parameters][32]
-*   [checkPulseTiming][33]
+*   [checkChainIntegrity][33]
     *   [Parameters][34]
-*   [fetchCertAndValidatePulse][35]
+*   [checkPulseTiming][35]
     *   [Parameters][36]
-*   [fetchCertificate][37]
+*   [fetchCertAndValidatePulse][37]
     *   [Parameters][38]
-*   [fetch][39]
+*   [fetchCertificate][39]
     *   [Parameters][40]
-*   [fetchLatest][41]
-*   [fetchAt][42]
-    *   [Parameters][43]
-*   [fetchAfter][44]
+*   [fetch][41]
+    *   [Parameters][42]
+*   [fetchLatest][43]
+*   [fetchAt][44]
     *   [Parameters][45]
-*   [fetchBefore][46]
+*   [fetchAfter][46]
     *   [Parameters][47]
-*   [fetchSubchain][48]
+*   [fetchBefore][48]
     *   [Parameters][49]
-*   [fetchSkiplist][50]
+*   [fetchSubchain][50]
     *   [Parameters][51]
-*   [nextPulseAt][52]
+*   [fetchSkiplist][52]
     *   [Parameters][53]
-*   [msToNextPulse][54]
+*   [nextPulseAt][54]
     *   [Parameters][55]
-*   [boundedRandom][56]
+*   [msToNextPulse][56]
     *   [Parameters][57]
-*   [getShuffleSeed][58]
+*   [boundedRandom][58]
     *   [Parameters][59]
-*   [shuffleSelf][60]
+*   [getShuffleSeed][60]
     *   [Parameters][61]
-*   [shuffle][62]
+*   [shuffleSelf][62]
     *   [Parameters][63]
-*   [UnmatchedPrecom][64]
-*   [TimeGap][65]
-*   [ChangedCert][66]
-*   [IntentionallyLastInChain][67]
-*   [hasStatus][68]
-    *   [Parameters][69]
-*   [isISODate][70]
+*   [shuffle][64]
+    *   [Parameters][65]
+*   [UnmatchedPrecom][66]
+*   [TimeGap][67]
+*   [ChangedCert][68]
+*   [IntentionallyLastInChain][69]
+*   [hasStatus][70]
     *   [Parameters][71]
-*   [zip][72]
+*   [isISODate][72]
     *   [Parameters][73]
-*   [getTimeStamp][74]
+*   [zip][74]
     *   [Parameters][75]
-*   [hex2bytes][76]
+*   [getTimeStamp][76]
     *   [Parameters][77]
-*   [hex2buf][78]
+*   [hex2bytes][78]
     *   [Parameters][79]
-*   [xorArrays][80]
+*   [hex2buf][80]
     *   [Parameters][81]
-*   [iterBitStream][82]
+*   [xorArrays][82]
     *   [Parameters][83]
-    *   [Examples][84]
+*   [iterBitStream][84]
+    *   [Parameters][85]
+    *   [Examples][86]
 
 ## BitReader
 
-[src/bit-reader.js:11-113][85]
+[src/bit-reader.js:11-119][87]
 
-*   **See**: [BitReader.from][86]
+*   **See**: [BitReader.from][88]
 
 Helper class to read bits from pulse value.
 **Note**: it is recommended to use `BitReader.from()`
 
 ### Parameters
 
-*   `buffer`  
-*   `ArrayBuffer`  
+*   `buffer` **[ArrayBuffer][89]** 
 
 ### shuffleSeed
 
-[src/bit-reader.js:37-42][87]
+[src/bit-reader.js:37-42][90]
 
 *   **See**: {getShuffleSeed}
 
@@ -111,7 +112,7 @@ The shuffleSeed for the data.
 
 ### maxShuffleLength
 
-[src/bit-reader.js:48-50][88]
+[src/bit-reader.js:48-50][91]
 
 *   **See**: {getShuffleSeed}
 
@@ -119,20 +120,22 @@ The maximum length of list this instance can shuffle.
 
 ### dataView
 
-[src/bit-reader.js:58-60][89]
+[src/bit-reader.js:58-60][92]
 
 Get a DataView of the bits.
 
 #### Parameters
 
-*   `byteOffset` **[Number][90]** 
-*   `byteLength` **[Number][90]** 
+*   `byteOffset` **[Number][93]** 
+*   `byteLength` **[Number][93]** 
 
-Returns **[DataView][91]** 
+Returns **[DataView][94]** 
 
 ### stream
 
-[src/bit-reader.js:67-69][92]
+[src/bit-reader.js:67-69][95]
+
+*   **See**: [https://github.com/inolen/bit-buffer][96]
 
 Get a BitStream of this data.
 
@@ -140,7 +143,9 @@ Returns **BitStream**
 
 ### view
 
-[src/bit-reader.js:76-78][93]
+[src/bit-reader.js:76-78][97]
+
+*   **See**: [https://github.com/inolen/bit-buffer][96]
 
 Get a BitView of this data.
 
@@ -148,37 +153,39 @@ Returns **BitView**
 
 ### shuffled
 
-[src/bit-reader.js:85-87][94]
+[src/bit-reader.js:85-87][98]
 
 Return a shuffled copy of provided array.
 
 #### Parameters
 
-*   `array` **[Array][95]** 
+*   `array` **[Array][99]** 
 
-Returns **[Array][95]** 
+Returns **[Array][99]** 
 
 ### applyShuffle
 
-[src/bit-reader.js:94-96][96]
+[src/bit-reader.js:94-96][100]
 
 Shuffle the provided array in place, modifying it.
 
 #### Parameters
 
-*   `array` **[Array][95]** 
+*   `array` **[Array][99]** 
 
-Returns **[Array][95]** 
+Returns **[Array][99]** 
 
 ### unfold
 
-[src/bit-reader.js:109-112][97]
+[src/bit-reader.js:109-112][101]
+
+*   **See**: [https://github.com/inolen/bit-buffer][96]
 
 Use given function to read a BitStream and generate array elements.
 
 #### Parameters
 
-*   `fn` **[Function][98]** 
+*   `fn` **[UnfoldCallback][102]** 
 *   `cls` **class** \=Array (optional, default `Array`)
 
 #### Examples
@@ -193,90 +200,101 @@ Returns **ArrayLike**
 
 ### from
 
-[src/bit-reader.js:17-23][99]
+[src/bit-reader.js:17-23][103]
 
 Create a BitReader object from pulse or hex string
 
 #### Parameters
 
-*   `pulseOrHexString` **([Object][100] | [String][101])** 
+*   `pulseOrHexString` **([Object][104] | [String][105])** 
 
-Returns **[BitReader][102]** 
+Returns **[BitReader][106]** 
+
+## UnfoldCallback
+
+[src/bit-reader.js:109-112][101]
+
+### Parameters
+
+*   `stream` **BitStream** 
+*   `index` **[Number][93]** 
+
+Returns **any** 
 
 ## InvalidSignature
 
-[src/errors.js:4-4][103]
+[src/errors.js:4-4][107]
 
 **Extends Error**
 
 ## InvalidPulse
 
-[src/errors.js:8-8][104]
+[src/errors.js:8-8][108]
 
 **Extends Error**
 
 ## LatePulse
 
-[src/errors.js:12-12][105]
+[src/errors.js:12-12][109]
 
 **Extends Error**
 
 ## BrokenChain
 
-[src/errors.js:16-16][106]
+[src/errors.js:16-16][110]
 
 **Extends Error**
 
 ## InvalidPrecom
 
-[src/errors.js:20-20][107]
+[src/errors.js:20-20][111]
 
 **Extends Error**
 
 ## setBeaconDomain
 
-[src/pulse.js:21-26][108]
+[src/pulse.js:21-26][112]
 
 Globally override the domain (with or without protocol) for beacon api.
 
 ### Parameters
 
-*   `domain` **[String][101]** 
+*   `domain` **[String][105]** 
 
 Returns **void** 
 
 ## serializePulse
 
-[src/pulse.js:60-62][109]
+[src/pulse.js:60-62][113]
 
 Serialize the pulse data as a deterministic JSON string
 
 ### Parameters
 
-*   `pulse` **[Object][100]** 
+*   `pulse` **[Object][104]** 
 
-Returns **[String][101]** 
+Returns **[String][105]** 
 
 ## checkPrecommitmentValue
 
-[src/pulse.js:71-81][110]
+[src/pulse.js:71-81][114]
 
 Asserts that `prevPulse` contains a valid precommitment value of `pulse`.
 
 ### Parameters
 
-*   `prevPulse` **[Object][100]** 
-*   `pulse` **[Object][100]** 
+*   `prevPulse` **[Object][104]** 
+*   `pulse` **[Object][104]** 
 
 <!---->
 
-*   Throws **[InvalidPrecom][111]** 
+*   Throws **[InvalidPrecom][115]** 
 
-Returns **[Boolean][112]** 
+Returns **[Boolean][116]** 
 
 ## validatePulse
 
-[src/pulse.js:93-124][113]
+[src/pulse.js:93-124][117]
 
 Assert that the given pulse is valid for use as a randomness source.
 Checks the signature is valid, the value is a hash of signature, and
@@ -284,19 +302,19 @@ that the status code has appropriate flags for use.
 
 ### Parameters
 
-*   `pulse` **[Object][100]** 
-*   `certPEM` **[String][101]** Certificate in PEM format
+*   `pulse` **[Object][104]** 
+*   `certPEM` **[String][105]** Certificate in PEM format
 
 <!---->
 
-*   Throws **[InvalidPulse][114]** 
-*   Throws **[InvalidSignature][115]** 
+*   Throws **[InvalidPulse][118]** 
+*   Throws **[InvalidSignature][119]** 
 
-Returns **[Boolean][112]** 
+Returns **[Boolean][116]** 
 
 ## checkChainIntegrity
 
-[src/pulse.js:134-150][116]
+[src/pulse.js:134-150][120]
 
 Asserts that given pulse list contains an unbroken chain of pulses.
 These can be either a sequential chain, or a skiplist. The list
@@ -304,17 +322,17 @@ will be sorted before verrification.
 
 ### Parameters
 
-*   `pulses` **[Array][95]<[Object][100]>** 
+*   `pulses` **[Array][99]<[Object][104]>** 
 
 <!---->
 
-*   Throws **[BrokenChain][117]** 
+*   Throws **[BrokenChain][121]** 
 
-Returns **[Boolean][112]** 
+Returns **[Boolean][116]** 
 
 ## checkPulseTiming
 
-[src/pulse.js:172-216][118]
+[src/pulse.js:172-216][122]
 
 Assert that pulse does not have a TimeGap flag and has timing in
 accordance with given rule.
@@ -329,107 +347,107 @@ than but within one pulse period of given Date (exclusive).
 
 ### Parameters
 
-*   `pulse` **[Object][100]** 
-*   `rule` **[Object][100]**  (optional, default `{latest:true}`)
+*   `pulse` **[Object][104]** 
+*   `rule` **[Object][104]**  (optional, default `{latest:true}`)
 
-    *   `rule.latest` **[Boolean][112]** 
-    *   `rule.after` **[Date][119]** 
-    *   `rule.at` **[Date][119]** 
-    *   `rule.before` **[Date][119]** 
+    *   `rule.latest` **[Boolean][116]** 
+    *   `rule.after` **[Date][123]** 
+    *   `rule.at` **[Date][123]** 
+    *   `rule.before` **[Date][123]** 
 
 <!---->
 
-*   Throws **[LatePulse][120]** 
+*   Throws **[LatePulse][124]** 
 
-Returns **[Boolean][112]** 
+Returns **[Boolean][116]** 
 
 ## fetchCertAndValidatePulse
 
-[src/pulse.js:225-235][121]
+[src/pulse.js:225-235][125]
 
-*   **See**: [validatePulse][29]
+*   **See**: [validatePulse][31]
 
 Validate the given pulse, fetching the certificate (or using
 a cached reference).
 
 ### Parameters
 
-*   `pulse` **[Object][100]** 
+*   `pulse` **[Object][104]** 
 
-Returns **[Promise][122]<[Object][100]>** resolves to given pulse
+Returns **[Promise][126]<[Object][104]>** resolves to given pulse
 
 ## fetchCertificate
 
-[src/pulse.js:248-253][123]
+[src/pulse.js:248-253][127]
 
 Fetch the given certificate by its hash id.
 
 ### Parameters
 
-*   `hashId` **[String][101]** 
+*   `hashId` **[String][105]** 
 
-Returns **[Promise][122]<[String][101]>** cert in PEM format
+Returns **[Promise][126]<[String][105]>** cert in PEM format
 
 ## fetch
 
-[src/pulse.js:261-263][124]
+[src/pulse.js:261-263][128]
 
 Fetch and validate a pulse by chain and pulse indicies.
 
 ### Parameters
 
-*   `chainIndex` **[Number][90]** 
-*   `pulseIndex` **[Number][90]** 
+*   `chainIndex` **[Number][93]** 
+*   `pulseIndex` **[Number][93]** 
 
-Returns **[Promise][122]<[Object][100]>** resolves to the pulse data
+Returns **[Promise][126]<[Object][104]>** resolves to the pulse data
 
 ## fetchLatest
 
-[src/pulse.js:269-273][125]
+[src/pulse.js:269-273][129]
 
 Fetch and validate the latest pulse.
 
-Returns **[Promise][122]<[Object][100]>** resolves to the pulse data
+Returns **[Promise][126]<[Object][104]>** resolves to the pulse data
 
 ## fetchAt
 
-[src/pulse.js:280-285][126]
+[src/pulse.js:280-285][130]
 
 Fetch and validate pulse at or within one period of given timestamp.
 
 ### Parameters
 
-*   `date` **([String][101] | [Date][119])** 
+*   `date` **([String][105] | [Date][123])** 
 
-Returns **[Promise][122]<[Object][100]>** resolves to the pulse data
+Returns **[Promise][126]<[Object][104]>** resolves to the pulse data
 
 ## fetchAfter
 
-[src/pulse.js:292-297][127]
+[src/pulse.js:292-297][131]
 
 Fetch and validate earliest pulse after given timestamp.
 
 ### Parameters
 
-*   `date` **([String][101] | [Date][119])** 
+*   `date` **([String][105] | [Date][123])** 
 
-Returns **[Promise][122]<[Object][100]>** resolves to the pulse data
+Returns **[Promise][126]<[Object][104]>** resolves to the pulse data
 
 ## fetchBefore
 
-[src/pulse.js:304-309][128]
+[src/pulse.js:304-309][132]
 
 Fetch and validate latest pulse before given timestamp.
 
 ### Parameters
 
-*   `date` **([String][101] | [Date][119])** 
+*   `date` **([String][105] | [Date][123])** 
 
-Returns **[Promise][122]<[Object][100]>** resolves to the pulse data
+Returns **[Promise][126]<[Object][104]>** resolves to the pulse data
 
 ## fetchSubchain
 
-[src/pulse.js:319-327][129]
+[src/pulse.js:319-327][133]
 
 Fetch and validate subchain of specified chain between start
 and end indices.
@@ -440,11 +458,11 @@ and end indices.
 *   `startIndex` **any** 
 *   `endIndex` **any** 
 
-Returns **[Promise][122]<[Object][100]>** resolves to the subchain data
+Returns **[Promise][126]<[Object][104]>** resolves to the subchain data
 
 ## fetchSkiplist
 
-[src/pulse.js:337-345][130]
+[src/pulse.js:337-345][134]
 
 Fetch and validate skiplist of specified chain between start
 and end indices.
@@ -455,36 +473,36 @@ and end indices.
 *   `startIndex` **any** 
 *   `endIndex` **any** 
 
-Returns **[Promise][122]<[Object][100]>** resolves to the skiplist data
+Returns **[Promise][126]<[Object][104]>** resolves to the skiplist data
 
 ## nextPulseAt
 
-[src/pulse.js:352-356][131]
+[src/pulse.js:352-356][135]
 
 Calculate the ETA datetime the next pulse will be released.
 
 ### Parameters
 
-*   `latestPulse` **[Object][100]** 
+*   `latestPulse` **[Object][104]** 
 
-Returns **[Date][119]** 
+Returns **[Date][123]** 
 
 ## msToNextPulse
 
-[src/pulse.js:364-366][132]
+[src/pulse.js:364-366][136]
 
 Calculate the number of milliseconds before release of the
 next pulse.
 
 ### Parameters
 
-*   `latestPulse` **[Object][100]** 
+*   `latestPulse` **[Object][104]** 
 
-Returns **[Number][90]** 
+Returns **[Number][93]** 
 
 ## boundedRandom
 
-[src/random.js:10-40][133]
+[src/random.js:10-40][137]
 
 Get an unbiased "random" number within the range `[0, s)`. The "random"
 values are read from the provided bitStream. The function attempts to read
@@ -492,14 +510,14 @@ as few bits as possible to achieve this.
 
 ### Parameters
 
-*   `s` **[Number][90]** Upper bound (exclusive)
+*   `s` **[Number][93]** Upper bound (exclusive)
 *   `bitStream` **BitStream** 
 
-Returns **[Number][90]** 
+Returns **[Number][93]** 
 
 ## getShuffleSeed
 
-[src/shuffle.js:11-15][134]
+[src/shuffle.js:11-15][138]
 
 Return an array fully filled with bounded random values appropriate
 to shuffle a list. The maximum sized list that can be shuffled is
@@ -509,98 +527,98 @@ the size of the returned seed array + 1
 
 *   `bitStream` **BitStream** 
 
-Returns **[Array][95]** 
+Returns **[Array][99]** 
 
 ## shuffleSelf
 
-[src/shuffle.js:29-41][135]
+[src/shuffle.js:29-41][139]
 
-*   **See**: [getShuffleSeed][58]
+*   **See**: [getShuffleSeed][60]
 
 Shuffle provided array **in place** using the given shuffle seed.
 
 ### Parameters
 
-*   `array` **[Array][95]** 
-*   `shuffleSeed` **[Array][95]** 
+*   `array` **[Array][99]** 
+*   `shuffleSeed` **[Array][99]** 
 
-Returns **[Array][95]** 
+Returns **[Array][99]** 
 
 ## shuffle
 
-[src/shuffle.js:50-52][136]
+[src/shuffle.js:50-52][140]
 
-*   **See**: [getShuffleSeed][58]
+*   **See**: [getShuffleSeed][60]
 
 Get a shuffled copy of provided array using the given shuffle seed.
 
 ### Parameters
 
-*   `array` **[Array][95]** 
-*   `shuffleSeed` **[Array][95]** 
+*   `array` **[Array][99]** 
+*   `shuffleSeed` **[Array][99]** 
 
-Returns **[Array][95]** 
+Returns **[Array][99]** 
 
 ## UnmatchedPrecom
 
-[src/status-codes.js:5-5][137]
+[src/status-codes.js:5-5][141]
 
 Unmatched precommitment value
 
-Type: [Number][90]
+Type: [Number][93]
 
 ## TimeGap
 
-[src/status-codes.js:10-10][138]
+[src/status-codes.js:10-10][142]
 
 pulse timestep more than 1 period away
 
-Type: [Number][90]
+Type: [Number][93]
 
 ## ChangedCert
 
-[src/status-codes.js:15-15][139]
+[src/status-codes.js:15-15][143]
 
 Certificate of non-first pulse has changed
 
-Type: [Number][90]
+Type: [Number][93]
 
 ## IntentionallyLastInChain
 
-[src/status-codes.js:20-20][140]
+[src/status-codes.js:20-20][144]
 
 Intentionally the last pulse in chain
 
-Type: [Number][90]
+Type: [Number][93]
 
 ## hasStatus
 
-[src/status-codes.js:28-30][141]
+[src/status-codes.js:28-30][145]
 
 Check if a pulse has a given status code
 
 ### Parameters
 
-*   `pulse` **[Object][100]** 
-*   `code` **[Number][90]** 
+*   `pulse` **[Object][104]** 
+*   `code` **[Number][93]** 
 
-Returns **[Boolean][112]** 
+Returns **[Boolean][116]** 
 
 ## isISODate
 
-[src/util.js:9-11][142]
+[src/util.js:9-11][146]
 
 Checks whether a datetime string is in ISO 8601 format
 
 ### Parameters
 
-*   `str` **[String][101]** 
+*   `str` **[String][105]** 
 
-Returns **[Boolean][112]** 
+Returns **[Boolean][116]** 
 
 ## zip
 
-[src/util.js:18-25][143]
+[src/util.js:18-25][147]
 
 zip the provided arrays together
 
@@ -612,43 +630,43 @@ Returns **ArrayLike**
 
 ## getTimeStamp
 
-[src/util.js:32-40][144]
+[src/util.js:32-40][148]
 
 Format the input as an ISO 8601 date string
 
 ### Parameters
 
-*   `isoStrOrDate` **([String][101] | [Date][119])** 
+*   `isoStrOrDate` **([String][105] | [Date][123])** 
 
-Returns **[String][101]** 
+Returns **[String][105]** 
 
 ## hex2bytes
 
-[src/util.js:47-61][145]
+[src/util.js:47-61][149]
 
 Parse hex string and return the bytes as a Uint8Array
 
 ### Parameters
 
-*   `input` **[String][101]** 
+*   `input` **[String][105]** 
 
-Returns **[Uint8Array][146]** 
+Returns **[Uint8Array][150]** 
 
 ## hex2buf
 
-[src/util.js:68-70][147]
+[src/util.js:68-70][151]
 
 Parse hex string and return the data as an array buffer
 
 ### Parameters
 
-*   `input` **[String][101]** 
+*   `input` **[String][105]** 
 
-Returns **[ArrayBuffer][148]** 
+Returns **[ArrayBuffer][89]** 
 
 ## xorArrays
 
-[src/util.js:78-84][149]
+[src/util.js:78-84][152]
 
 Perform an XOR operation on two arrays
 
@@ -661,14 +679,14 @@ Returns **ArrayLike**
 
 ## iterBitStream
 
-[src/util.js:96-107][150]
+[src/util.js:96-107][153]
 
 Utility to yield results from provided function using a bitstream.
 Stops when bitstream runs out of usable bits.
 
 ### Parameters
 
-*   `fn` **[Function][98]** 
+*   `fn` **[Function][154]** 
 
 ### Examples
 
@@ -711,268 +729,276 @@ Array.from(iterBitStream(() => bitStream.readBits(8)))
 
 [17]: #parameters-5
 
-[18]: #invalidsignature
+[18]: #unfoldcallback
 
-[19]: #invalidpulse
+[19]: #parameters-6
 
-[20]: #latepulse
+[20]: #invalidsignature
 
-[21]: #brokenchain
+[21]: #invalidpulse
 
-[22]: #invalidprecom
+[22]: #latepulse
 
-[23]: #setbeacondomain
+[23]: #brokenchain
 
-[24]: #parameters-6
+[24]: #invalidprecom
 
-[25]: #serializepulse
+[25]: #setbeacondomain
 
 [26]: #parameters-7
 
-[27]: #checkprecommitmentvalue
+[27]: #serializepulse
 
 [28]: #parameters-8
 
-[29]: #validatepulse
+[29]: #checkprecommitmentvalue
 
 [30]: #parameters-9
 
-[31]: #checkchainintegrity
+[31]: #validatepulse
 
 [32]: #parameters-10
 
-[33]: #checkpulsetiming
+[33]: #checkchainintegrity
 
 [34]: #parameters-11
 
-[35]: #fetchcertandvalidatepulse
+[35]: #checkpulsetiming
 
 [36]: #parameters-12
 
-[37]: #fetchcertificate
+[37]: #fetchcertandvalidatepulse
 
 [38]: #parameters-13
 
-[39]: #fetch
+[39]: #fetchcertificate
 
 [40]: #parameters-14
 
-[41]: #fetchlatest
+[41]: #fetch
 
-[42]: #fetchat
+[42]: #parameters-15
 
-[43]: #parameters-15
+[43]: #fetchlatest
 
-[44]: #fetchafter
+[44]: #fetchat
 
 [45]: #parameters-16
 
-[46]: #fetchbefore
+[46]: #fetchafter
 
 [47]: #parameters-17
 
-[48]: #fetchsubchain
+[48]: #fetchbefore
 
 [49]: #parameters-18
 
-[50]: #fetchskiplist
+[50]: #fetchsubchain
 
 [51]: #parameters-19
 
-[52]: #nextpulseat
+[52]: #fetchskiplist
 
 [53]: #parameters-20
 
-[54]: #mstonextpulse
+[54]: #nextpulseat
 
 [55]: #parameters-21
 
-[56]: #boundedrandom
+[56]: #mstonextpulse
 
 [57]: #parameters-22
 
-[58]: #getshuffleseed
+[58]: #boundedrandom
 
 [59]: #parameters-23
 
-[60]: #shuffleself
+[60]: #getshuffleseed
 
 [61]: #parameters-24
 
-[62]: #shuffle
+[62]: #shuffleself
 
 [63]: #parameters-25
 
-[64]: #unmatchedprecom
+[64]: #shuffle
 
-[65]: #timegap
+[65]: #parameters-26
 
-[66]: #changedcert
+[66]: #unmatchedprecom
 
-[67]: #intentionallylastinchain
+[67]: #timegap
 
-[68]: #hasstatus
+[68]: #changedcert
 
-[69]: #parameters-26
+[69]: #intentionallylastinchain
 
-[70]: #isisodate
+[70]: #hasstatus
 
 [71]: #parameters-27
 
-[72]: #zip
+[72]: #isisodate
 
 [73]: #parameters-28
 
-[74]: #gettimestamp
+[74]: #zip
 
 [75]: #parameters-29
 
-[76]: #hex2bytes
+[76]: #gettimestamp
 
 [77]: #parameters-30
 
-[78]: #hex2buf
+[78]: #hex2bytes
 
 [79]: #parameters-31
 
-[80]: #xorarrays
+[80]: #hex2buf
 
 [81]: #parameters-32
 
-[82]: #iterbitstream
+[82]: #xorarrays
 
 [83]: #parameters-33
 
-[84]: #examples-1
+[84]: #iterbitstream
 
-[85]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L11-L113 "Source code on GitHub"
+[85]: #parameters-34
 
-[86]: #bitreaderfrom
+[86]: #examples-1
 
-[87]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L37-L42 "Source code on GitHub"
+[87]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L11-L119 "Source code on GitHub"
 
-[88]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L48-L50 "Source code on GitHub"
+[88]: #bitreaderfrom
 
-[89]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L58-L60 "Source code on GitHub"
+[89]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
 
-[90]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[90]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L37-L42 "Source code on GitHub"
 
-[91]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView
+[91]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L48-L50 "Source code on GitHub"
 
-[92]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L67-L69 "Source code on GitHub"
+[92]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L58-L60 "Source code on GitHub"
 
-[93]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L76-L78 "Source code on GitHub"
+[93]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[94]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L85-L87 "Source code on GitHub"
+[94]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/DataView
 
-[95]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[95]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L67-L69 "Source code on GitHub"
 
-[96]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L94-L96 "Source code on GitHub"
+[96]: https://github.com/inolen/bit-buffer
 
-[97]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L109-L112 "Source code on GitHub"
+[97]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L76-L78 "Source code on GitHub"
 
-[98]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[98]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L85-L87 "Source code on GitHub"
 
-[99]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/bit-reader.js#L17-L23 "Source code on GitHub"
+[99]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[100]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[100]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L94-L96 "Source code on GitHub"
 
-[101]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[101]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L109-L112 "Source code on GitHub"
 
-[102]: #bitreader
+[102]: #unfoldcallback
 
-[103]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/errors.js#L4-L4 "Source code on GitHub"
+[103]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/bit-reader.js#L17-L23 "Source code on GitHub"
 
-[104]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/errors.js#L8-L8 "Source code on GitHub"
+[104]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[105]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/errors.js#L12-L12 "Source code on GitHub"
+[105]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[106]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/errors.js#L16-L16 "Source code on GitHub"
+[106]: #bitreader
 
-[107]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/errors.js#L20-L20 "Source code on GitHub"
+[107]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/errors.js#L4-L4 "Source code on GitHub"
 
-[108]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L21-L26 "Source code on GitHub"
+[108]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/errors.js#L8-L8 "Source code on GitHub"
 
-[109]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L60-L62 "Source code on GitHub"
+[109]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/errors.js#L12-L12 "Source code on GitHub"
 
-[110]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L71-L81 "Source code on GitHub"
+[110]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/errors.js#L16-L16 "Source code on GitHub"
 
-[111]: #invalidprecom
+[111]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/errors.js#L20-L20 "Source code on GitHub"
 
-[112]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[112]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L21-L26 "Source code on GitHub"
 
-[113]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L93-L124 "Source code on GitHub"
+[113]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L60-L62 "Source code on GitHub"
 
-[114]: #invalidpulse
+[114]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L71-L81 "Source code on GitHub"
 
-[115]: #invalidsignature
+[115]: #invalidprecom
 
-[116]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L134-L150 "Source code on GitHub"
+[116]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[117]: #brokenchain
+[117]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L93-L124 "Source code on GitHub"
 
-[118]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L172-L216 "Source code on GitHub"
+[118]: #invalidpulse
 
-[119]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date
+[119]: #invalidsignature
 
-[120]: #latepulse
+[120]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L134-L150 "Source code on GitHub"
 
-[121]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L225-L235 "Source code on GitHub"
+[121]: #brokenchain
 
-[122]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[122]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L172-L216 "Source code on GitHub"
 
-[123]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L248-L253 "Source code on GitHub"
+[123]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date
 
-[124]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L261-L263 "Source code on GitHub"
+[124]: #latepulse
 
-[125]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L269-L273 "Source code on GitHub"
+[125]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L225-L235 "Source code on GitHub"
 
-[126]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L280-L285 "Source code on GitHub"
+[126]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[127]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L292-L297 "Source code on GitHub"
+[127]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L248-L253 "Source code on GitHub"
 
-[128]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L304-L309 "Source code on GitHub"
+[128]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L261-L263 "Source code on GitHub"
 
-[129]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L319-L327 "Source code on GitHub"
+[129]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L269-L273 "Source code on GitHub"
 
-[130]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L337-L345 "Source code on GitHub"
+[130]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L280-L285 "Source code on GitHub"
 
-[131]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L352-L356 "Source code on GitHub"
+[131]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L292-L297 "Source code on GitHub"
 
-[132]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/pulse.js#L364-L366 "Source code on GitHub"
+[132]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L304-L309 "Source code on GitHub"
 
-[133]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/random.js#L10-L40 "Source code on GitHub"
+[133]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L319-L327 "Source code on GitHub"
 
-[134]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/shuffle.js#L11-L15 "Source code on GitHub"
+[134]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L337-L345 "Source code on GitHub"
 
-[135]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/shuffle.js#L29-L41 "Source code on GitHub"
+[135]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L352-L356 "Source code on GitHub"
 
-[136]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/shuffle.js#L50-L52 "Source code on GitHub"
+[136]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/pulse.js#L364-L366 "Source code on GitHub"
 
-[137]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/status-codes.js#L5-L5 "Source code on GitHub"
+[137]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/random.js#L10-L40 "Source code on GitHub"
 
-[138]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/status-codes.js#L10-L10 "Source code on GitHub"
+[138]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/shuffle.js#L11-L15 "Source code on GitHub"
 
-[139]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/status-codes.js#L15-L15 "Source code on GitHub"
+[139]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/shuffle.js#L29-L41 "Source code on GitHub"
 
-[140]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/status-codes.js#L20-L20 "Source code on GitHub"
+[140]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/shuffle.js#L50-L52 "Source code on GitHub"
 
-[141]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/status-codes.js#L28-L30 "Source code on GitHub"
+[141]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/status-codes.js#L5-L5 "Source code on GitHub"
 
-[142]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/util.js#L9-L11 "Source code on GitHub"
+[142]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/status-codes.js#L10-L10 "Source code on GitHub"
 
-[143]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/util.js#L18-L25 "Source code on GitHub"
+[143]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/status-codes.js#L15-L15 "Source code on GitHub"
 
-[144]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/util.js#L32-L40 "Source code on GitHub"
+[144]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/status-codes.js#L20-L20 "Source code on GitHub"
 
-[145]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/util.js#L47-L61 "Source code on GitHub"
+[145]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/status-codes.js#L28-L30 "Source code on GitHub"
 
-[146]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
+[146]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/util.js#L9-L11 "Source code on GitHub"
 
-[147]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/util.js#L68-L70 "Source code on GitHub"
+[147]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/util.js#L18-L25 "Source code on GitHub"
 
-[148]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
+[148]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/util.js#L32-L40 "Source code on GitHub"
 
-[149]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/util.js#L78-L84 "Source code on GitHub"
+[149]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/util.js#L47-L61 "Source code on GitHub"
 
-[150]: https://github.com/buff-beacon-project/curbyjs/blob/e1b65fde1f428ccc4a51d027808611e2eeb5890b/src/util.js#L96-L107 "Source code on GitHub"
+[150]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array
+
+[151]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/util.js#L68-L70 "Source code on GitHub"
+
+[152]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/util.js#L78-L84 "Source code on GitHub"
+
+[153]: https://github.com/buff-beacon-project/curbyjs/blob/b660a0f9eaa6ce0607cd723490532bfb1bedca35/src/util.js#L96-L107 "Source code on GitHub"
+
+[154]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function

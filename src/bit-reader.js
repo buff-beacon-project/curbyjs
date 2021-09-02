@@ -6,7 +6,7 @@ import { BitStream, BitView } from 'bit-buffer'
  * Helper class to read bits from pulse value.
  * **Note**: it is recommended to use `BitReader.from()`
  * @see {@link BitReader.from}
- * @param {ArrayBuffer}
+ * @param {ArrayBuffer} buffer
  */
 export class BitReader {
   /**
@@ -61,7 +61,7 @@ export class BitReader {
 
   /**
    * Get a BitStream of this data.
-   * @link https://github.com/inolen/bit-buffer
+   * @see {@link https://github.com/inolen/bit-buffer}
    * @returns {BitStream}
    */
   stream() {
@@ -70,7 +70,7 @@ export class BitReader {
 
   /**
    * Get a BitView of this data.
-   * @link https://github.com/inolen/bit-buffer
+   * @see {@link https://github.com/inolen/bit-buffer}
    * @returns {BitView}
    */
   view() {
@@ -101,8 +101,8 @@ export class BitReader {
    * // generate a list of boolean values
    * const reader = BitReader.from(pulse)
    * const toggles = reader.unfold((stream) => stream.readBoolean())
-   * @link https://github.com/inolen/bit-buffer
-   * @param {Function} fn
+   * @see {@link https://github.com/inolen/bit-buffer}
+   * @param {UnfoldCallback} fn
    * @param {class} cls=Array
    * @returns {ArrayLike}
    */
@@ -110,4 +110,10 @@ export class BitReader {
     const stream = this.stream()
     return cls.from(iterBitStream((i) => fn(stream, i)))
   }
+  /**
+   * @name UnfoldCallback
+   * @param {BitStream} stream
+   * @param {Number} index
+   * @returns {any}
+   */
 }
