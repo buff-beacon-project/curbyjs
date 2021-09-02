@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { getTimeStamp, zip, hex2bytes, xorArrays } from './util'
+import { getTimeStamp, zip, hex2bytes, xorArrays } from './util.js'
 import stringify from 'safe-stable-stringify'
 import { KJUR } from 'jsrsasign'
 import { SHA3 } from 'sha3'
-import * as Errors from './errors'
-import * as StatusCodes from './status-codes'
+import * as Errors from './errors.js'
+import * as StatusCodes from './status-codes.js'
 
 const CACHED_SIGNATURES = {}
 

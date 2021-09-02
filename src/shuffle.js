@@ -1,5 +1,5 @@
-import { iterBitStream } from './util'
-import { boundedRandom } from './random'
+import { iterBitStream } from './util.js'
+import { boundedRandom } from './random.js'
 
 // Return an array fully filled with bounded random values appropriate
 // to shuffle a list. The maximum sized list that can be shuffled is

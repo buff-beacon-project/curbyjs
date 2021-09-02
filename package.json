@@ -2,9 +2,8 @@
   "name": "curbyjs",
   "version": "1.0.0",
   "description": "Javascript library for interacting with the CURBY (CU Randomness Beacon)",
-  "main": "dist/curbyjs.node.js",
   "scripts": {
-    "build": "webpack --mode=development && npm run test",
+    "build": "webpack --mode=production && npm run test",
     "dev": "webpack --progress --watch --mode=production",
     "run-test": "npm run build && node test/run.js",
     "test": "BABEL_ENV=test mocha --require @babel/polyfill --require @babel/register --colors ./test/*.spec.mjs",
@@ -19,6 +18,20 @@
   "license": "MIT",
   "bugs": {
     "url": ""
+  },
+  "type": "module",
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
+  "module": "src/index.js",
+  "main": "src/index.js",
+  "exports": {
+    "umd": "./dist/curbyjs.node.js",
+    "default": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=12"
   },
   "browserslist": [
     "last 1 version",

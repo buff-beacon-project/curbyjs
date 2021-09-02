@@ -1,5 +1,5 @@
-import { hex2buf, iterBitStream } from './util'
-import { getShuffleSeed, shuffle, shuffleSelf } from './shuffle'
+import { hex2buf, iterBitStream } from './util.js'
+import { getShuffleSeed, shuffle, shuffleSelf } from './shuffle.js'
 import { BitStream, BitView } from 'bit-buffer'
 
 export class BitReader {
