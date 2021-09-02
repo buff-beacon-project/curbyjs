@@ -1,7 +1,15 @@
 
-// https://arxiv.org/abs/1805.10941
-// https://lemire.me/blog/2016/06/30/fast-random-shuffling/
+/**
+ * Get an unbiased "random" number within the range `[0, s)`. The "random"
+ * values are read from the provided bitStream. The function attempts to read
+ * as few bits as possible to achieve this.
+ * @param {Number} s Upper bound (exclusive)
+ * @param {BitStream} bitStream
+ * @returns {Number}
+ */
 export function boundedRandom(s, bitStream) {
+  // https://arxiv.org/abs/1805.10941
+  // https://lemire.me/blog/2016/06/30/fast-random-shuffling/
   if (s < 0 || s % 1 !== 0) { throw new Error('Value must be a positive integer >= 2') }
   if (s < 2) { return 0 }
   const log2s = Math.log2(s)

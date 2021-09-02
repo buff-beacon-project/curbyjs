@@ -7,7 +7,8 @@
     "dev": "webpack --progress --watch --mode=production",
     "run-test": "npm run build && node test/run.js",
     "test": "BABEL_ENV=test mocha --require @babel/polyfill --require @babel/register --colors ./test/*.spec.mjs",
-    "test:watch": "mocha --require babel-register --colors -w ./test/*.spec.mjs"
+    "test:watch": "mocha --require babel-register --colors -w ./test/*.spec.mjs",
+    "docs": "documentation build src/** -f md --github -o API.md"
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,7 @@
     "babel-plugin-add-module-exports": "^1.0.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "chai": "^4.3.4",
+    "documentation": "^13.2.5",
     "eslint": "^7.31.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.14.0",
