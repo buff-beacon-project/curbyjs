@@ -5,8 +5,18 @@ import { KJUR } from 'jsrsasign'
 import { SHA3 } from 'sha3'
 import * as Errors from './errors.js'
 import * as StatusCodes from './status-codes.js'
+import { certFromPem, validateCertChain } from './cert-chain.js'
+import { YUBIHSM2_ATTEST_CA_CRT, E45DA5F361B091B30D8F2C6FA040DB6FEF57918E } from './certs.js'
 
 const CACHED_SIGNATURES = {}
+const CERT_CHAIN = {
+  trustedCerts: [certFromPem(YUBIHSM2_ATTEST_CA_CRT)]
+  , certs: [
+    certFromPem(E45DA5F361B091B30D8F2C6FA040DB6FEF57918E)
+  ]
+}
+const VALID_CERTS = {}
+const CERTIFICATES = {}
 
 const beaconFetch = axios.create({
   baseURL: 'https://random.colorado.edu/api/'
@@ -28,8 +38,6 @@ export function setBeaconDomain(domain){
   }
   beaconFetch.defaults.baseURL = `${domain}/api/`
 }
-
-const CERTIFICATES = {}
 
 function getSigningAlgorithm(pulse){
   switch (pulse.content.cypher_suite){
@@ -219,6 +227,38 @@ export function checkPulseTiming(pulse, rule = { latest: true }){
   throw new Error('Invalid rule specified')
 }
 
+async function prefetchAttestationCerts(){
+  const info = await fetchServiceInfo()
+  return Promise.all(info.hsm_attestation_cert_ids.map(id => {
+    return beaconFetch(`/certificate/${id}`, {
+      responseType: 'text'
+    })
+      .then(res => res.data)
+      .then(pem => validateCert(pem, false))
+  }))
+}
+
+/**
+ * Validate a certificate against the YUBIHSM attestation chain
+ * @param {String} pem Certificate data in PEM format to check
+ * @param {bool} [fetchAttestationCerts=true] whether to fetch the beacon attestation certs
+ * @returns Promies<String> PEM data of valid certificate
+ */
+export async function validateCert(pem, fetchAttestationCerts = true){
+  if (pem in VALID_CERTS){ return pem }
+  if (fetchAttestationCerts){
+    await prefetchAttestationCerts()
+  }
+  const cert = certFromPem(pem)
+  await validateCertChain({
+    trustedCerts: CERT_CHAIN.trustedCerts
+    , certs: CERT_CHAIN.certs.concat(Object.values(VALID_CERTS))
+  })
+  // it's valid. add it to cache
+  VALID_CERTS[pem] = cert
+  return pem
+}
+
 /**
  * Validate the given pulse, fetching the certificate (or using
  * a cached reference).
@@ -240,8 +280,17 @@ export async function fetchCertAndValidatePulse(pulse){
 
 async function parseResponseAndValidate(res){
   const pulse = res.data
-  fetchCertAndValidatePulse(pulse)
+  await fetchCertAndValidatePulse(pulse)
   return pulse
+}
+
+/**
+ * Fetch the beacon service info
+ * @returns {Promise<Object>} service info
+ */
+export function fetchServiceInfo(){
+  return beaconFetch('/')
+    .then(res => res.data)
 }
 
 /**
@@ -254,6 +303,7 @@ export function fetchCertificate(hashId){
     responseType: 'text'
   })
     .then(res => res.data)
+    .then(pem => validateCert(pem))
 }
 
 /**

@@ -66,9 +66,12 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
+    "asn1js": "^2.1.1",
     "axios": "^0.21.1",
+    "base64-arraybuffer": "^1.0.1",
     "bit-buffer": "^0.2.5",
     "jsrsasign": "^10.4.0",
+    "pkijs": "^2.1.97",
     "safe-stable-stringify": "^1.1.1",
     "sha3": "^2.1.4"
   }
