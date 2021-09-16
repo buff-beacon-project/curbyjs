@@ -7,4 +7,4 @@
 TODO:
 
 - [ ]: Add an audit mode to see verifications
-- [ ]: Check certificate with CA
+- [x]: Check certificate with CA

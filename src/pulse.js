@@ -182,7 +182,7 @@ export function checkChainIntegrity(pulses){
  * @returns {Boolean}
  */
 export function checkPulseTiming(pulse, rule = { latest: true }){
-  if (StatusCodes.hasStatus(pulse, StatusCodes.TimeGap)){
+  if (StatusCodes.hasStatus(pulse, StatusCodes.TimeGap) && pulse.content.pulse_index !== 0){
     throw new Errors.LatePulse('Pulse Status signifying TimeGap')
   }
 
