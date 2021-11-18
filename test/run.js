@@ -1,6 +1,7 @@
-const { fetchLatest, BitReader, msToNextPulse, setBeaconDomain } = require('..')
+import { fetchLatest, fetch, BitReader, msToNextPulse, setBeaconDomain } from '../src/index.js'
 
-setBeaconDomain('http://192.168.99.105:8000')
+// setBeaconDomain('http://192.168.99.105:8000')
+setBeaconDomain('http://localhost:8000')
 
 const arr = Array(60).fill(0).map((x, i) => i)
 

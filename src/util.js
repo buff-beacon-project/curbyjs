@@ -40,6 +40,15 @@ export function getTimeStamp(isoStrOrDate){
 }
 
 /**
+ * Convert a Uint8Array to a hex string
+ * @param {Uint8Array} input
+ * @returns {String}
+ */
+export function bytesToHex(buffer) {
+  return Array.prototype.map.call(buffer, x => ('00' + x.toString(16)).slice(-2)).join('')
+}
+
+/**
  * Parse hex string and return the bytes as a Uint8Array
  * @param {String} input
  * @returns {Uint8Array}

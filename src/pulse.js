@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { getTimeStamp, zip, hex2bytes, xorArrays } from './util.js'
-import stringify from 'safe-stable-stringify'
+import { getTimeStamp, zip, hex2bytes, bytesToHex, xorArrays } from './util.js'
+import { serializePulseContent } from './serialize.js'
 import { KJUR } from 'jsrsasign'
 import { SHA3 } from 'sha3'
 import * as Errors from './errors.js'
@@ -64,14 +64,9 @@ function getHashFunction(pulse){
   }
 }
 
-/**
- * Serialize the pulse data as a deterministic JSON string
- * @param {Object} pulse
- * @returns {String}
- */
-export function serializePulse(pulse){
-  return stringify(pulse.content)
-}
+// export function serializePulse(pulse){
+//   return stringify(pulse.content)
+// }
 
 /**
  * Asserts that `prevPulse` contains a valid precommitment value of `pulse`.
@@ -107,7 +102,7 @@ export function validatePulse(pulse, certPEM){
     throw new Errors.InvalidPulse('Pulse has unmatched precommitment value')
   }
 
-  const message = serializePulse(pulse)
+  const message = serializePulseContent(pulse)
 
   let signatureValid = false
   if (message in CACHED_SIGNATURES){
@@ -116,7 +111,7 @@ export function validatePulse(pulse, certPEM){
     const alg = getSigningAlgorithm(pulse)
     const sig = new KJUR.crypto.Signature({ alg })
     sig.init(certPEM)
-    sig.updateString(message)
+    sig.updateHex(bytesToHex(message))
     signatureValid = sig.verify(pulse.signature)
   }
 
