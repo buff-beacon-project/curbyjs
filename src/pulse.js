@@ -43,6 +43,8 @@ function getSigningAlgorithm(pulse){
   switch (pulse.content.cypher_suite){
     case 0:
       return 'SHA256withECDSA'
+    case 1:
+      return 'SHA256withRSA'
     default:
       throw new Error(`Cypher suite ${pulse.content.cypher_suite} not implemented`)
   }
@@ -51,6 +53,7 @@ function getSigningAlgorithm(pulse){
 function getHashFunction(pulse){
   switch (pulse.content.cypher_suite) {
     case 0:
+    case 1:
       return (() => {
         const hash = new SHA3(512)
         return (msg, encoding, outencoding) => {
